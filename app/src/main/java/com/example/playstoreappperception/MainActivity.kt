@@ -18,6 +18,7 @@ import com.chaquo.python.android.AndroidPlatform
 import com.example.playstoreappperception.data.Review
 import com.example.playstoreappperception.screen.ResultScreen
 import com.example.playstoreappperception.screen.ReviewAnalysisScreen
+import com.example.playstoreappperception.ui.theme.TimerDarkColor
 import com.google.gson.Gson
 
 class MainActivity : ComponentActivity() {
@@ -35,7 +36,7 @@ class MainActivity : ComponentActivity() {
             MaterialTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = TimerDarkColor
                 ) {
                         val navController = rememberNavController()
 
