@@ -19,8 +19,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -30,17 +28,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.playstoreappperception.AppIconButton
-import com.example.playstoreappperception.R
-import com.example.playstoreappperception.data.Review
+import com.example.playstoreappperception.LoadImageFromUrl
+import com.example.playstoreappperception.MainViewModel
+import com.example.playstoreappperception.data.AppInfo
 import com.example.playstoreappperception.ui.theme.TeslaWhite
 import com.example.playstoreappperception.ui.theme.monserratFont
 import ir.ehsannarmani.compose_charts.ColumnChart
@@ -55,8 +54,10 @@ import kotlin.math.roundToInt
 @Composable
 fun ResultScreen(
     navController: NavController,
-    data: Review,
+    viewModel: MainViewModel,
 ) {
+    val data = viewModel.data
+
     val positiveReviews = data.positiveReviews
     val negativeReviews = data.negativeReviews
     val neutralReviews = data.neutralReviews
@@ -114,6 +115,22 @@ fun ResultScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            Text(
+                text = data.appName, textAlign = TextAlign.Center, style = TextStyle(
+                    color = TeslaWhite,
+                    fontSize = 24.sp,
+                    fontFamily = monserratFont,
+                    fontWeight = FontWeight.Black
+                )
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LoadImageFromUrl(data.iconUrl)
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+
             // Display Pie Chart Data
             pieChartData.forEach { data ->
                 Row(
@@ -146,67 +163,6 @@ fun ResultScreen(
 
             // Spacer
             Spacer(modifier = Modifier.height(16.dp))
-
-            // Column Chart
-            ColumnChart(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 22.dp)
-                    .height(200.dp),
-                labelProperties = LabelProperties(
-                    textStyle = TextStyle(
-                        color = Color.White, // Set text color to white
-                        fontSize = 16.sp,
-                        fontFamily = monserratFont // Use your custom font if defined
-                    ),
-                    enabled = true
-                ),
-                data = remember {
-                    listOf(
-                        Bars(
-                            label = "",
-                            values = listOf(
-                                Bars.Data(
-                                    label = "",
-                                    value = positiveReviews.toDouble(),
-                                    color = Brush.verticalGradient(
-                                        listOf(Color(0xFF0EA463), Color(0xFF0EA463))
-                                    )
-                                )
-                            )
-                        ),
-                        Bars(
-                            label = "",
-                            values = listOf(
-                                Bars.Data(
-                                    label = "",
-                                    value = negativeReviews.toDouble(),
-                                    color = Brush.verticalGradient(
-                                        listOf(Color(0xFFF84B56), Color(0xFFF84B56))
-                                    )
-                                )
-                            )
-                        ),
-                        Bars(
-                            label = "",
-                            values = listOf(
-                                Bars.Data(
-                                    label = "",
-                                    value = neutralReviews.toDouble(),
-                                    color = Brush.verticalGradient(
-                                        listOf(Color(0xFF292929), Color(0xFF292929))
-                                    )
-                                )
-                            )
-                        )
-                    )
-                },
-                barProperties = BarProperties(),
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessLow
-                ),
-            )
         }
     }
 }
@@ -216,6 +172,8 @@ fun ResultScreen(
 private fun ResultScreen_Preview() {
     ResultScreen(
         navController = rememberNavController(),
-        data = Review(positiveReviews = 10, negativeReviews = 4, neutralReviews = 3)
+        viewModel = MainViewModel().apply {
+            data = AppInfo(positiveReviews = 10, negativeReviews = 4, neutralReviews = 3, appName = "Gojek", iconUrl = "")
+        }
     )
 }

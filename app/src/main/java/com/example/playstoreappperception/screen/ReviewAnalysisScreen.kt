@@ -12,12 +12,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,7 +30,7 @@ import androidx.navigation.NavHostController
 import com.example.playstoreappperception.MainActivity
 import com.example.playstoreappperception.MainViewModel
 import com.example.playstoreappperception.R
-import com.example.playstoreappperception.data.Review
+import com.example.playstoreappperception.data.AppInfo
 import com.example.playstoreappperception.ui.theme.ScoreLinearGradient
 import com.example.playstoreappperception.ui.theme.ScoreboardDarkGray
 import com.example.playstoreappperception.ui.theme.TeslaGray
@@ -52,7 +46,7 @@ fun ReviewAnalysisScreen(viewModel: MainViewModel, navController: NavHostControl
 
     var packageName by remember { mutableStateOf("") }
     var reviewLimit by remember { mutableStateOf("") }
-    var predictionResults by remember { mutableStateOf<Review?>(null) }
+    var predictionResults by remember { mutableStateOf<AppInfo?>(null) }
     val coroutineScope = rememberCoroutineScope()
     var loading by remember { mutableStateOf(false) }
 
@@ -179,8 +173,9 @@ fun ReviewAnalysisScreen(viewModel: MainViewModel, navController: NavHostControl
 
                             predictionResults = viewModel.callPlayStoreReview(packageName, reviewLimit, selectedOption).await()
 
-                            val str = Gson().toJson(predictionResults)
-                            navController.navigate("${MainActivity.RESULT_SCREEN}/$str")
+                            viewModel.data = predictionResults ?: return@launch
+
+                            navController.navigate("${MainActivity.RESULT_SCREEN}")
                             loading = false
                         }
                     } else {

@@ -1,4 +1,4 @@
-from google_play_scraper import Sort, reviews
+from google_play_scraper import app, Sort, reviews
 import pandas as pd
 import ssl
 import joblib
@@ -8,7 +8,15 @@ from os.path import dirname, join
 # Fix SSL context issue
 ssl._create_default_https_context = ssl._create_unverified_context
 
-def analyze_reviews(app_package, review_limit, model_type='svm'):
+def fetch_and_analyze(app_package, review_limit, model_type='svm'):
+    # Fetch app details
+    app_result = app(
+        app_package,
+        lang='id',
+        country='id'
+    )
+
+    # Initialize list for all reviews
     reviews_all = []
 
     # Get the initial batch of reviews
@@ -68,24 +76,16 @@ def analyze_reviews(app_package, review_limit, model_type='svm'):
     # Predict sentiments (assumes 0 for negative, 1 for neutral, 2 for positive)
     predictions = model.predict(X)
 
-    # Log the unique values in predictions to verify
-    unique_pred_values = np.unique(predictions)
-    print(f"Unique prediction values: {unique_pred_values}")
-
     # Count the number of predictions for each sentiment
     positive_count = np.sum(predictions == '2')  # Count positives
     neutral_count = np.sum(predictions == '1')   # Count neutrals
     negative_count = np.sum(predictions == '0')  # Count negatives
     total_reviews = total_unique_reviews         # Use the unique review count as the total
 
-    # Log the counts for troubleshooting
-    print(f"Total unique reviews: {total_reviews}")
-    print(f"Predicted positive reviews: {positive_count}")
-    print(f"Predicted neutral reviews: {neutral_count}")
-    print(f"Predicted negative reviews: {negative_count}")
-    print(f"Predicted positive percentage: {(positive_count / total_reviews) * 100:.2f}%")
-
-    return {
+    # Return flat dictionary with app details and review analysis results
+    result = {
+        "title": app_result['title'],
+        "iconUrl": app_result['icon'],
         "total_reviews": total_reviews,
         "positive_reviews": positive_count,
         "neutral_reviews": neutral_count,
@@ -93,6 +93,8 @@ def analyze_reviews(app_package, review_limit, model_type='svm'):
         "positive_percentage": (positive_count / total_reviews) * 100
     }
 
+    return result
+
 # Example usage
-# result = analyze_reviews('com.gojek.app', 100, 'svm')
+# result = fetch_and_analyze('com.gojek.app', 100, 'svm')
 # print(result)

@@ -15,11 +15,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
-import com.example.playstoreappperception.data.Review
+import com.example.playstoreappperception.data.AppInfo
 import com.example.playstoreappperception.screen.ResultScreen
 import com.example.playstoreappperception.screen.ReviewAnalysisScreen
 import com.example.playstoreappperception.ui.theme.TimerDarkColor
-import com.google.gson.Gson
 
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
@@ -42,13 +41,8 @@ class MainActivity : ComponentActivity() {
 
                         NavHost(navController = navController, startDestination = REVIEW_SCREEN) {
                             composable(REVIEW_SCREEN) { ReviewAnalysisScreen(viewModel, navController) }
-                            composable("$RESULT_SCREEN/{data}", arguments = listOf(
-                                navArgument("data") {
-                                    type = ReviewParamType()
-                                }
-                            )) {
-                                val data = it.arguments?.getParcelable<Review>("data") ?: return@composable
-                                ResultScreen(navController, data)
+                            composable("$RESULT_SCREEN") {
+                                ResultScreen(navController, viewModel)
                             }
                         }
                 }
