@@ -1,6 +1,6 @@
 ﻿# [College] Play Store Perception App
 
-# Tech
+## Tech
 - Python
 - Kotlin
 - Jetpack Compose
