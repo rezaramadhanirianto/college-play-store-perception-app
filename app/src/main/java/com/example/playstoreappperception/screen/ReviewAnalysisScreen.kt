@@ -31,6 +31,7 @@ import com.example.playstoreappperception.MainActivity
 import com.example.playstoreappperception.MainViewModel
 import com.example.playstoreappperception.R
 import com.example.playstoreappperception.data.AppInfo
+import com.example.playstoreappperception.init
 import com.example.playstoreappperception.ui.theme.ScoreLinearGradient
 import com.example.playstoreappperception.ui.theme.ScoreboardDarkGray
 import com.example.playstoreappperception.ui.theme.TeslaGray
