@@ -1,6 +1,6 @@
 ﻿# [College] Play Store Perception App
 
-## Tech
+## Tech Stack
 - Python
   - KNN Model
   - SVM Model
